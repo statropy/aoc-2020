@@ -32,8 +32,7 @@ def combined():
         for line in f:
             rule, pw = line.split(': ')
             pwrange, char = rule.split(' ')
-            ranges = [int(x) for x in pwrange.split('-')]
-            minrange, maxrange = int(ranges[0]), int(ranges[1])
+            minrange, maxrange = [int(x) for x in pwrange.split('-')]
             count = pw.count(char)
             if count >= minrange and count <= maxrange:
                 correct1 += 1
