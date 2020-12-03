@@ -59,8 +59,7 @@ int main(void)
     rewind(f);
 
     char *treemap = malloc(filesize);
-    char (*line)[width] = (char (*)[width])treemap;
-    while(fscanf(f, "%s", (char*)line++) == 1);
+    fread(treemap, width, lines, f);
     
     printf("Memory traversal: ");
     long prodm = traverse_memory(treemap, width, lines, 3, 1);
