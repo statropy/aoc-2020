@@ -48,9 +48,10 @@ int main(void)
 
     while(fgetc(f) != '\n');
     long width = ftell(f);
-    fseek(f, 0, SEEK_END);
+    fseek(f, -1, SEEK_END);
+    int c = fgetc(f);
     long filesize = ftell(f);
-    if(fgetc(f) != '\n') {
+    if(c != '\n') {
         filesize++;
     }
     long lines = filesize / width;
