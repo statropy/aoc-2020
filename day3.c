@@ -9,9 +9,10 @@ int traverse_memory(const char *treemap, long width, long lines, int right, int 
     int x = 0;
     int y = 0;
     int count = 0;
+    char (*arr)[width] = (char (*)[width])treemap;
 
     while(y < lines) {
-        if(treemap[(y*width)+x] == '#') {
+        if(arr[y][x] == '#') {
             count++;
         }
         x = (x + right) % (width-1);
@@ -57,11 +58,9 @@ int main(void)
     long lines = filesize / width;
     rewind(f);
 
-    char* treemap = malloc(filesize);
-    char* buffer = treemap;
-    while(fscanf(f, "%s", (char*)buffer) == 1) {
-        buffer += width;
-    }
+    char *treemap = malloc(filesize);
+    char (*line)[width] = (char (*)[width])treemap;
+    while(fscanf(f, "%s", (char*)line++) == 1);
     
     printf("Memory traversal: ");
     long prodm = traverse_memory(treemap, width, lines, 3, 1);
