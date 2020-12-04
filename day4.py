@@ -70,10 +70,30 @@ def manual():
 
 
 
+def validate_range(value, minval, maxval, unit=''):
+    uval = ''
+    if len(unit) > 0:
+        value, uval = value[:-len(unit)], value[-len(unit):]
+    try:
+        ival = int(value)
+        return unit == uval and ival >= minval and ival <= maxval
+    except Exception:
+        return False
+
+def validate_regex(value, *regex):
+    return re.compile(''.join(regex)).fullmatch(value) is not None
+
+rules = {'byr': (validate_range, (1920, 2002)),
+         'iyr': (validate_range, (2010, 2020)),
+         'eyr': (validate_range, (2020, 2030)),
+         'hgt': (validate_range, (150, 193, 'cm'), (59, 76, 'in')),
+         'hcl': (validate_regex, (r'#[0-9a-f]{6}')),
+         'ecl': (validate_regex, (r'amb|blu|brn|gry|grn|hzl|oth')),
+         'pid': (validate_regex, (r'[0-9]{9}'))}
+
 def make_passport(fields):
-    required = {'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'}
     p = dict([tuple(field.split(':')) for field in fields])
-    if p.keys() >= required:
+    if p.keys() >= rules.keys():
         return p
     return None
 
@@ -91,30 +111,7 @@ def passport():
         p = make_passport(fields)
         if p: yield p
 
-def validate_range(value, minval, maxval, unit=''):
-    try:
-        if len(unit) > 0:
-            ival = int(value[:-len(unit)])
-            uval = value[-len(unit):]
-        else:
-            ival = int(value)
-            uval = ''
-        return unit == uval and ival >= minval and ival <= maxval
-    except Exception:
-        return False
-
-def validate_regex(value, *regex):
-    return re.compile(''.join(regex)).fullmatch(value) is not None
-
 def is_valid(passport):
-    rules = {'byr': (validate_range, (1920, 2002)),
-             'iyr': (validate_range, (2010, 2020)),
-             'eyr': (validate_range, (2020, 2030)),
-             'hgt': (validate_range, (150, 193, 'cm'), (59, 76, 'in')),
-             'hcl': (validate_regex, (r'#[0-9a-f]{6}')),
-             'ecl': (validate_regex, (r'amb|blu|brn|gry|grn|hzl|oth')),
-             'pid': (validate_regex, (r'[0-9]{9}'))}
-
     for key,value in passport.items():
         if key in rules.keys():
             func = rules[key][0]
