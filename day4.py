@@ -1,4 +1,6 @@
 #day4.py
+import re
+
 def process(passport):
     if len(passport) < 7:
         return False, False
@@ -47,7 +49,7 @@ def process(passport):
 
     return True, True
 
-if __name__ == '__main__':
+def manual():
     with open('input4.txt', 'r') as f:
         present = 0
         valid = 0
@@ -65,3 +67,69 @@ if __name__ == '__main__':
         if p: present += 1
         if v: valid += 1 
         print(present, valid)
+
+
+
+def make_passport(fields):
+    required = {'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'}
+    p = dict([tuple(field.split(':')) for field in fields])
+    if p.keys() >= required:
+        return p
+    return None
+
+def passport():
+    with open('input4.txt', 'r') as f:
+        fields = []
+        for line in f:
+            line = line.strip()
+            if len(line) == 0:
+                p = make_passport(fields)
+                if p: yield p
+                fields = []
+            else:
+                fields += line.split()
+        p = make_passport(fields)
+        if p: yield p
+
+def validate_range(value, minval, maxval, unit=''):
+    try:
+        if len(unit) > 0:
+            ival = int(value[:-len(unit)])
+            uval = value[-len(unit):]
+        else:
+            ival = int(value)
+            uval = ''
+        return unit == uval and ival >= minval and ival <= maxval
+    except Exception:
+        return False
+
+def validate_regex(value, *regex):
+    return re.compile(''.join(regex)).fullmatch(value) is not None
+
+def is_valid(passport):
+    rules = {'byr': (validate_range, (1920, 2002)),
+             'iyr': (validate_range, (2010, 2020)),
+             'eyr': (validate_range, (2020, 2030)),
+             'hgt': (validate_range, (150, 193, 'cm'), (59, 76, 'in')),
+             'hcl': (validate_regex, (r'#[0-9a-f]{6}')),
+             'ecl': (validate_regex, (r'amb|blu|brn|gry|grn|hzl|oth')),
+             'pid': (validate_regex, (r'[0-9]{9}'))}
+
+    for key,value in passport.items():
+        if key in rules.keys():
+            func = rules[key][0]
+            validators = rules[key][1:]
+            valid = [args for args in validators if func(value, *args)]
+            if len(valid) == 0:
+                return False
+
+    return True
+
+def using_rules():
+    present = [p for p in passport()]
+    valid  = [p for p in present if is_valid(p)]
+    print(len(present), len(valid))
+
+if __name__ == '__main__':
+    manual()
+    using_rules()
