@@ -92,10 +92,7 @@ rules = {'byr': (validate_range, (1920, 2002)),
          'pid': (validate_regex, (r'[0-9]{9}'))}
 
 def make_passport(fields):
-    p = dict([tuple(field.split(':')) for field in fields])
-    if p.keys() >= rules.keys():
-        return p
-    return None
+    return dict([tuple(field.split(':')) for field in fields])
 
 def passport():
     with open('input4.txt', 'r') as f:
@@ -103,13 +100,11 @@ def passport():
         for line in f:
             line = line.strip()
             if len(line) == 0:
-                p = make_passport(fields)
-                if p: yield p
+                yield make_passport(fields)
                 fields = []
             else:
                 fields += line.split()
-        p = make_passport(fields)
-        if p: yield p
+        yield make_passport(fields)
 
 def is_valid(passport):
     for key,value in passport.items():
@@ -119,11 +114,10 @@ def is_valid(passport):
             valid = [args for args in validators if func(value, *args)]
             if len(valid) == 0:
                 return False
-
     return True
 
 def using_rules():
-    present = [p for p in passport()]
+    present = [p for p in passport() if p.keys() >= rules.keys()]
     valid  = [p for p in present if is_valid(p)]
     print(len(present), len(valid))
 
