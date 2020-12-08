@@ -6,7 +6,7 @@ def part1(program):
     visited = [0]*len(program)
     while visited[pc] == 0:
         visited[pc] = 1
-        inst, value = program[pc][0], int(program[pc][1])
+        inst, value = program[pc]
         if inst == 'jmp':
             pc += value
         else:
@@ -25,8 +25,8 @@ def terminator(program, swap):
             return None
 
         visited[pc] = 1
-        inst, value = program[pc][0], int(program[pc][1])
-        
+        inst, value = program[pc]
+
         if pc == swap:
             if inst == 'jmp':
                 inst = 'nop';
@@ -42,7 +42,7 @@ def terminator(program, swap):
     return acc
 
 if __name__ == '__main__':
-    program = [line.split() for line in open('input8.txt', 'r')]
+    program = [[int(v) if v[-1].isdigit() else v for v in line.split()] for line in open('input8.txt', 'r')]
     part1(program)
     for pc in range(len(program)):
         if program[pc][0] != 'acc':
