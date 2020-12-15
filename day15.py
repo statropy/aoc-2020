@@ -12,22 +12,26 @@ def number_game(initial, stop=2020):
 
 class TestNumberGame(unittest.TestCase):
 
-    def test_a(self):
+    def test_part1(self):
         self.assertEqual(436, number_game([0,3,6]))
-    def test_b(self):
         self.assertEqual(1, number_game([1,3,2]))
-    def test_c(self):
         self.assertEqual(10, number_game([2,1,3]))
-    def test_d(self):
         self.assertEqual(27, number_game([1,2,3]))
-    def test_e(self):
         self.assertEqual(78, number_game([2,3,1]))
-    def test_f(self):
         self.assertEqual(438, number_game([3,2,1]))
-    def test_g(self):
         self.assertEqual(1836, number_game([3,1,2]))
-    def test_h(self):
-        self.assertEqual(175594, number_game([0,3,6],30000000))
+        self.assertEqual(387, number_game([14,1,17,0,3,20]))
+
+    def test_part2(self):
+        stop = 30000000
+        self.assertEqual(175594, number_game([0,3,6],stop))
+        self.assertEqual(2578, number_game([1,3,2],stop))
+        self.assertEqual(3544142, number_game([2,1,3],stop))
+        self.assertEqual(261214, number_game([1,2,3],stop))
+        self.assertEqual(6895259, number_game([2,3,1],stop))
+        self.assertEqual(18, number_game([3,2,1],stop))
+        self.assertEqual(362, number_game([3,1,2],stop))
+        self.assertEqual(6428, number_game([14,1,17,0,3,20],stop))
 
 if __name__ == '__main__':
     unittest.main()

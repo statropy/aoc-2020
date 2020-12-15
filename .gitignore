@@ -1,6 +1,7 @@
 /*
 !*.py
 !*.c
+!*.cpp
 !*.rs
 !.gitignore
 !README.md
