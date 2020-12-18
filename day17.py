@@ -19,12 +19,10 @@ def step(space):
 def conway(dimension, filename='input17.txt', cycles=6):
     space = set()
     with open(filename, 'r') as f:
-        y = 0
-        for line in f:
+        for y,line in enumerate(f):
             for x,v in enumerate(line.strip()):
                 if v == '#':
                     space.add(tuple([x,y] +[0]*(dimension-2)))
-            y += 1
     for i in range(cycles):
         space = step(space)
     return len(space)
