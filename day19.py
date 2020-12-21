@@ -50,8 +50,8 @@ def run(part2=False):
 
         if part2:
             rule0 = '(?P<left>('+regex[42]+'){2,})' + '(?P<right>('+regex[31]+')+)'
-            rule0a = '('+regex[42]+')'
-            rule0b = '('+regex[31]+')'
+            rule0a = regex[42]
+            rule0b = regex[31]
             rega = re.compile(rule0a)
             regb = re.compile(rule0b)
         else:
