@@ -28,7 +28,7 @@ def rcombat(deck1, deck2, depth=0):
     rounds = 0
     while True:
         rounds += 1
-        state = (tuple(deck1), tuple(deck2))
+        state = tuple(deck1)
         if state in states:
             deck2 = []
         else:
