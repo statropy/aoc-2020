@@ -1,17 +1,13 @@
 #day24.py
-from collections import namedtuple
-
-Point = namedtuple('Point', ['x', 'y'])
-
-steps = {'e':Point(2,0), 'w':Point(-2,0), 'ne':Point(1,1), 'se':Point(1,-1), 'nw':Point(-1,1), 'sw':Point(-1,-1)}
+steps = {'e':(2,0), 'w':(-2,0), 'ne':(1,1), 'se':(1,-1), 'nw':(-1,1), 'sw':(-1,-1)}
 
 def add(p1, p2):
-    return Point(p1.x+p2.x, p1.y+p2.y)
+    return (p1[0]+p2[0],p1[1]+p2[1])
 
 def part1(routes):
     hexmap = set()
     for route in routes:
-        pos = Point(0,0)
+        pos = (0,0)
         partial = None
         direction = None
         for c in route:
@@ -22,8 +18,6 @@ def part1(routes):
                 direction = partial+c
             else:
                 direction = c
-            if direction == 'e':
-                step = Point
             pos = add(pos, steps[direction])
             partial = None
         if pos in hexmap:
@@ -58,7 +52,6 @@ def step2(hexmap):
         if len(black_neighbors(hexmap, pos)) == 2:
             nextmap.add(pos)
     return nextmap
-
 
 def part2(hexmap, rounds=100):
     for i in range(rounds):

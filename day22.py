@@ -25,15 +25,12 @@ def combat(deck1, deck2):
 
 def rcombat(deck1, deck2, depth=0):
     states = set()
-    rounds = 0
     while True:
-        rounds += 1
         state = tuple(deck1)
         if state in states:
             deck2 = []
         else:
             states.add(state)
-        rounds += 1
         if len(deck1) == 0:
             return 2, calcscore(deck2) if depth==0 else 0
         elif len(deck2) == 0:
@@ -42,18 +39,17 @@ def rcombat(deck1, deck2, depth=0):
         c2 = deck2.pop(0)
         w = 0
         if len(deck1) >= c1 and len(deck2) >= c2:
-            w, score = rcombat(deck1[:c1], deck2[:c2], depth+1)
+            if max(deck1[:c1]) > max(deck2[:c2]): #thanks reddit!
+                w, score = 1, 0
+            else:
+                w, score = rcombat(deck1[:c1], deck2[:c2], depth+1)
         else:
             w = 1 if c1 > c2 else 2
 
         if w == 1:
-            deck1.append(c1)
-            deck1.append(c2)
+            deck1 += [c1,c2]
         else:
-            deck2.append(c2)
-            deck2.append(c1)
-    print('Part 2 overflow')
-    return 1,-2
+            deck2 += [c2,c1]
 
 deck1 = []
 deck2 = []
